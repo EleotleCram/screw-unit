@@ -231,7 +231,7 @@ Behavioral testing, that is, asserting that certain functions are called rather 
 
 ## Asynchronous Testing
 
-Asynchronous testing is done by specifying one or more `waitFor'/`run' functions inside an `it'.
+Asynchronous testing is done by specifying one or more `waitFor`/`run` functions inside an `it`.
 
     it("tests an asynchronous function", function() {
       function asyncSum(lhs, rhs, result) {
