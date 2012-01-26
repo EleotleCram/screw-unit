@@ -1,13 +1,13 @@
-_short prefatory note:
+_short prefatory note:_
 
-For everyone who, like me, still thinks Jasmine is bloatware and Screw-Unit is small and beautiful.
+_For everyone who, like me, still thinks Jasmine is bloatware and Screw-Unit is small and beautiful._
 
-This is a (more or less) maintained fork of Screw-Unit which has the following additional features:
+_This is a (more or less) maintained fork of Screw-Unit which has the following additional features:_
 
-* Support for asynchronous testing
+* _Support for asynchronous testing_
 
 
--- Marcel Toele_
+_-- Marcel Toele_
 
 ___
 
