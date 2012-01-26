@@ -1,4 +1,4 @@
-short prefatory note:
+_short prefatory note:
 
 For everyone who, like me, still thinks Jasmine is bloatware and Screw-Unit is small and beautiful.
 
@@ -6,8 +6,8 @@ This is a (more or less) maintained fork of Screw-Unit which has the following a
 
 * Support for asynchronous testing
 
-__
-Marcel Toele
+
+-- Marcel Toele_
 
 ___
 
@@ -247,11 +247,11 @@ Asynchronous testing is done by specifying one or more `waitFor'/`run' functions
       });
 
       waitFor({
-	description: "waiting for asyncSum to give a result timed out.",
+        description: "waiting for asyncSum to give a result timed out.",
         run: function() {
           return result.sum !== undefined;
         },
-	timeout: 1500
+        timeout: 1500
       });
 
       /* An alternative short-hand waitFor function with default description and timeout (of 5000ms) would be to use:
