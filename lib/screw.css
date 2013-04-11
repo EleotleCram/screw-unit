@@ -88,3 +88,9 @@ html {
             color: #000 !important;
             border-bottom: 1px solid #9A8E51;
           }
+
+/* Undecorate anchor links of the clickables */
+div.describe>h3>a, .describe>h1>a, .it>h2>a {
+	text-decoration: none;
+	color: inherit;
+}
