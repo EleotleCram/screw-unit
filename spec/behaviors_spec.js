@@ -139,6 +139,56 @@ Screw.Unit(function() {
         });
       });
 
+      describe("two nested [describe]s with [before] and [after] blocks", function() {
+        var invocations = [];
+
+        function addBeforesAndAftersAndIts(innerOrOuter) {
+          before(function() { invocations.push(innerOrOuter + ' before 1'); });
+          before(function() { invocations.push(innerOrOuter + ' before 2'); });
+          after(function() { invocations.push(innerOrOuter + ' after 1'); });
+          after(function() { invocations.push(innerOrOuter + ' after 2'); });
+          it(innerOrOuter + " test it 1", function() { invocations.push(innerOrOuter + ' test it 1'); });
+        }
+
+        describe("outer test describe", function() {
+          addBeforesAndAftersAndIts('outer');
+          it("outer test it 2", function() { invocations.push('outer test it 2'); });
+
+          describe("inner test describe", function() {
+            addBeforesAndAftersAndIts('inner');
+          });
+        });
+
+        // The describe here ensures that the test fixture above is run first, so that the 'it' below
+        // can assert the proper invocation order.
+        describe("", function() {
+          it("runs all blocks in the correct order", function() {
+            expect(invocations).to(equal,
+              [
+                "outer before 1",
+                "outer before 2",
+                  "outer test it 1",
+                "outer after 1",
+                "outer after 2",
+                "outer before 1",
+                "outer before 2",
+                  "outer test it 2",
+                "outer after 1",
+                "outer after 2",
+                "outer before 1",
+                "outer before 2",
+                  "inner before 1",
+                  "inner before 2",
+                    "inner test it 1",
+                  "inner after 1",
+                  "inner after 2",
+                "outer after 1",
+                "outer after 2",
+              ]);
+          });
+        });
+      });
+
       describe("A describe block with exceptions", function() {
         var after_invoked = false;
         after(function() {
