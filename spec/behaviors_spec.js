@@ -90,14 +90,18 @@ Screw.Unit(function() {
         });
       });
 
-      describe("two nested [describe]s with [before] and [after] blocks", function() {
+      describe("two nested [describe]s with [onceBefore], [before], [onceAfter] and [after] blocks", function() {
         var invocations = [];
 
         function addBeforesAndAftersAndIts(innerOrOuter) {
+          onceBefore(function() { invocations.push(innerOrOuter + ' onceBefore 1'); });
+          onceBefore(function() { invocations.push(innerOrOuter + ' onceBefore 2'); });
           before(function() { invocations.push(innerOrOuter + ' before 1'); });
           before(function() { invocations.push(innerOrOuter + ' before 2'); });
           after(function() { invocations.push(innerOrOuter + ' after 1'); });
           after(function() { invocations.push(innerOrOuter + ' after 2'); });
+          onceAfter(function() { invocations.push(innerOrOuter + ' onceAfter 1'); });
+          onceAfter(function() { invocations.push(innerOrOuter + ' onceAfter 2'); });
           it(innerOrOuter + " test it 1", function() { invocations.push(innerOrOuter + ' test it 1'); });
         }
 
@@ -114,8 +118,11 @@ Screw.Unit(function() {
         // can assert the proper invocation order.
         describe("", function() {
           it("runs all blocks in the correct order", function() {
+			  console.log('invocations');console.dir(invocations);
             expect(invocations).to(equal,
               [
+                "outer onceBefore 1",
+                "outer onceBefore 2",
                 "outer before 1",
                 "outer before 2",
                   "outer test it 1",
@@ -128,13 +135,19 @@ Screw.Unit(function() {
                 "outer after 2",
                 "outer before 1",
                 "outer before 2",
+                  "inner onceBefore 1",
+                  "inner onceBefore 2",
                   "inner before 1",
                   "inner before 2",
                     "inner test it 1",
                   "inner after 1",
                   "inner after 2",
+                  "inner onceAfter 1",
+                  "inner onceAfter 2",
                 "outer after 1",
                 "outer after 2",
+                "outer onceAfter 1",
+                "outer onceAfter 2",
               ]);
           });
         });
