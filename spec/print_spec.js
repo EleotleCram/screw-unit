@@ -1,4 +1,4 @@
-Screw.Unit(function() {
+Screw.Unit(function() {with(Screw.Specifications) {with(Screw.Matchers) {
   describe("Print", function() {
     describe('when given undefined', function() {
       it("returns 'undefined'", function() {
@@ -149,4 +149,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}}});

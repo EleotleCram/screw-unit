@@ -1,4 +1,4 @@
-Screw.Unit(function() {
+Screw.Unit(function() {with(Screw.Specifications) {with(Screw.Matchers) {
   var global_before_invoked = false, global_after_invoked = false;
   before(function() { global_before_invoked = true });
   after(function() { global_after_invoked = true });
@@ -175,4 +175,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}}});
