@@ -103,11 +103,11 @@ Screw.Unit(function() {
           onceAfter(function() { invocations.push(innerOrOuter + ' onceAfter 1'); });
           onceAfter(function() { invocations.push(innerOrOuter + ' onceAfter 2'); });
           it(innerOrOuter + " test it 1", function() { invocations.push(innerOrOuter + ' test it 1'); });
+          it(innerOrOuter + " test it 2", function() { invocations.push(innerOrOuter + ' test it 2'); });
         }
 
         describe("outer test describe", function() {
           addBeforesAndAftersAndIts('outer');
-          it("outer test it 2", function() { invocations.push('outer test it 2'); });
 
           describe("inner test describe", function() {
             addBeforesAndAftersAndIts('inner');
@@ -118,34 +118,48 @@ Screw.Unit(function() {
         // can assert the proper invocation order.
         describe("", function() {
           it("runs all blocks in the correct order", function() {
-			  console.log('invocations');console.dir(invocations);
             expect(invocations).to(equal,
               [
                 "outer onceBefore 1",
                 "outer onceBefore 2",
+
                 "outer before 1",
                 "outer before 2",
                   "outer test it 1",
                 "outer after 1",
                 "outer after 2",
+
                 "outer before 1",
                 "outer before 2",
                   "outer test it 2",
                 "outer after 1",
                 "outer after 2",
-                "outer before 1",
-                "outer before 2",
+
                   "inner onceBefore 1",
                   "inner onceBefore 2",
+
+                "outer before 1",
+                "outer before 2",
                   "inner before 1",
                   "inner before 2",
                     "inner test it 1",
                   "inner after 1",
                   "inner after 2",
-                  "inner onceAfter 1",
-                  "inner onceAfter 2",
                 "outer after 1",
                 "outer after 2",
+
+                "outer before 1",
+                "outer before 2",
+                  "inner before 1",
+                  "inner before 2",
+                    "inner test it 2",
+                  "inner after 1",
+                  "inner after 2",
+                "outer after 1",
+                "outer after 2",
+
+                  "inner onceAfter 1",
+                  "inner onceAfter 2",
                 "outer onceAfter 1",
                 "outer onceAfter 2",
               ]);
