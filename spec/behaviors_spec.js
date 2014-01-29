@@ -72,13 +72,12 @@ Screw.Unit(function() {
 
       describe("A describe with a nested describe", function() {
         var before_invocations = [], after_invocations = [];
+
         before(function() {
-          before_invocations = [];
           before_invocations.push("outermost before");
         });
 
         after(function() {
-          after_invocations = [];
           after_invocations.push("outermost after");
         });
       
@@ -89,52 +88,81 @@ Screw.Unit(function() {
         it("outside a nested [describe], does not invoke any of the nested's [after]s", function() {
           expect(after_invocations).to(equal, ["outermost after"]);
         });
-        
-        describe("a nested [describe]", function() {
-          before(function() {
-            before_invocations.push("inner before");
-          });
+      });
 
-          after(function() {
-            after_invocations.push("inner after");
-          });
+      describe("two nested [describe]s with [onceBefore], [before], [onceAfter] and [after] blocks", function() {
+        var invocations = [];
 
-          it("runs [before]s in the parent [describe] before each [it]", function() {
-            expect(before_invocations).to(equal, ["outermost before", "inner before"]);
-          });
+        function addBeforesAndAftersAndIts(innerOrOuter) {
+          onceBefore(function() { invocations.push(innerOrOuter + ' onceBefore 1'); });
+          onceBefore(function() { invocations.push(innerOrOuter + ' onceBefore 2'); });
+          before(function() { invocations.push(innerOrOuter + ' before 1'); });
+          before(function() { invocations.push(innerOrOuter + ' before 2'); });
+          after(function() { invocations.push(innerOrOuter + ' after 1'); });
+          after(function() { invocations.push(innerOrOuter + ' after 2'); });
+          onceAfter(function() { invocations.push(innerOrOuter + ' onceAfter 1'); });
+          onceAfter(function() { invocations.push(innerOrOuter + ' onceAfter 2'); });
+          it(innerOrOuter + " test it 1", function() { invocations.push(innerOrOuter + ' test it 1'); });
+          it(innerOrOuter + " test it 2", function() { invocations.push(innerOrOuter + ' test it 2'); });
+        }
 
-          it("runs [after]s in the parent [describe] after each [it]", function() {
-            expect(after_invocations).to(equal, ["outermost after", "inner after"]);
-          });
-          
-          describe("a doubly nested [describe]", function() {
-            before(function() {
-              before_invocations.push('innermost before');
-            });
+        describe("outer test describe", function() {
+          addBeforesAndAftersAndIts('outer');
 
-            after(function() {
-              after_invocations.push('innermost after');
-            });
-  
-            describe('[before] blocks', function() {
-              it("runs [before]s in all ancestors before an [it]", function() {
-                expect(before_invocations).to(equal, ["outermost before", "inner before", "innermost before"]);
-              });
-  
-              it("runs [before]s in all ancestors before each [it]", function() {
-                expect(before_invocations).to(equal, ["outermost before", "inner before", "innermost before"]);
-              });
-            });
-            
-            describe('[after] blocks', function() {
-              it("runs [after]s in all ancestors after an [it]", function() {
-                expect(after_invocations).to(equal, ["outermost after", "inner after", "innermost after"]);
-              });
-  
-              it("runs [after]s in all ancestors after each [it]", function() {
-                expect(after_invocations).to(equal, ["outermost after", "inner after", "innermost after"]);
-              });
-            });
+          describe("inner test describe", function() {
+            addBeforesAndAftersAndIts('inner');
+          });
+        });
+
+        // The describe here ensures that the test fixture above is run first, so that the 'it' below
+        // can assert the proper invocation order.
+        describe("", function() {
+          it("runs all blocks in the correct order", function() {
+            expect(invocations).to(equal,
+              [
+                "outer onceBefore 1",
+                "outer onceBefore 2",
+
+                "outer before 1",
+                "outer before 2",
+                  "outer test it 1",
+                "outer after 1",
+                "outer after 2",
+
+                "outer before 1",
+                "outer before 2",
+                  "outer test it 2",
+                "outer after 1",
+                "outer after 2",
+
+                  "inner onceBefore 1",
+                  "inner onceBefore 2",
+
+                "outer before 1",
+                "outer before 2",
+                  "inner before 1",
+                  "inner before 2",
+                    "inner test it 1",
+                  "inner after 1",
+                  "inner after 2",
+                "outer after 1",
+                "outer after 2",
+
+                "outer before 1",
+                "outer before 2",
+                  "inner before 1",
+                  "inner before 2",
+                    "inner test it 2",
+                  "inner after 1",
+                  "inner after 2",
+                "outer after 1",
+                "outer after 2",
+
+                  "inner onceAfter 1",
+                  "inner onceAfter 2",
+                "outer onceAfter 1",
+                "outer onceAfter 2",
+              ]);
           });
         });
       });
