@@ -1,4 +1,4 @@
-Screw.Unit(function() {
+Screw.Unit(function() {with(Screw.Specifications) {with(Screw.Matchers) {
   describe("Matchers", function() {
     describe('#equal', function() {
       it("invokes the provided matcher on a call to expect", function() {
@@ -234,4 +234,4 @@ Screw.Unit(function() {
     });
 
   });
-});
+}}});
